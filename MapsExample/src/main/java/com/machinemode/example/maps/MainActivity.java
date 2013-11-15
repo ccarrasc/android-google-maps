@@ -1,82 +1,33 @@
 package com.machinemode.example.maps;
 
-import android.content.Context;
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.model.LatLng;
+import com.machinemode.example.maps.locator.GoogleServicesLocator;
+import com.machinemode.example.maps.locator.PlatformLocator;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends Activity {
 
     private final static String TAG = MainActivity.class.getSimpleName();
-    private GoogleMap map;
-    private LocationManager locationManager;
-
-    private LocationListener locationListener = new LocationListener() {
-        @Override
-        public void onLocationChanged(Location location) {
-            Log.d(TAG, location.toString());
-            updateMap(location);
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-
-        }
-    };
-
-    private Criteria criteria = new Criteria();
-    private String provider;
+    private PlatformLocator platformLocator;
+    private GoogleServicesLocator googleServicesLocator;
+    private GoogleMap mapA, mapB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-        criteria.setAccuracy(Criteria.ACCURACY_COARSE);
-        provider = locationManager.getBestProvider(criteria, true);
-        Location location = new Location(provider);
+        // TODO: Check for Google Play Services
 
-        Log.d(TAG, provider);
+        mapA = ((MapFragment)getFragmentManager().findFragmentById(R.id.mapA)).getMap();
+        mapA.setMyLocationEnabled(true);
+        platformLocator = new PlatformLocator(this, mapA);
 
-        try {
-            locationManager.requestSingleUpdate(provider, locationListener, null);
-            location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-        }
-        catch (SecurityException e) {
-            Log.d(TAG, e.getMessage());
-        }
-        catch (IllegalArgumentException e) {
-            Log.d(TAG, e.getMessage());
-        }
-
-        map = ((MapFragment)getFragmentManager().findFragmentById(R.id.map)).getMap();
-        map.setMyLocationEnabled(true);
-        if(location != null) {
-            map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
-        }
-    }
-
-    private void updateMap(Location location) {
-        map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
+        mapB = ((MapFragment)getFragmentManager().findFragmentById(R.id.mapB)).getMap();
+        mapB.setMyLocationEnabled(true);
+        googleServicesLocator = new GoogleServicesLocator(this, mapB);
     }
 }
