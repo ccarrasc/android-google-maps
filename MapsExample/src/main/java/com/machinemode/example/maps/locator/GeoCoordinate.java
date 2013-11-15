@@ -1,18 +1,18 @@
 package com.machinemode.example.maps.locator;
 
+import android.location.Location;
+
 import java.lang.reflect.Field;
 
 public class GeoCoordinate {
     private double latitude;
     private double longitude;
 
-    public GeoCoordinate() {
-
-    }
-
-    public GeoCoordinate(double latitude, double longitude) {
-        this.latitude = latitude;
-        this.longitude = longitude;
+    public GeoCoordinate(Location location) {
+        if(location != null) {
+            this.latitude = location.getLatitude();
+            this.longitude = location.getLongitude();
+        }
     }
 
     public double getLatitude() {
@@ -23,12 +23,8 @@ public class GeoCoordinate {
         return longitude;
     }
 
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
+    public boolean isValid() {
+        return latitude != 0 && longitude != 0;
     }
 
     @Override

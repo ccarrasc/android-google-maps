@@ -2,6 +2,7 @@ package com.machinemode.example.maps.locator;
 
 import android.content.Context;
 import android.location.Criteria;
+import android.location.Location;
 import android.location.LocationManager;
 import android.util.Log;
 
@@ -20,8 +21,10 @@ public final class PlatformLocator extends Locator {
         Log.d(TAG, provider);
 
         try {
-            locationManager.requestSingleUpdate(provider, this, null);
-            //Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            updateMap(new GeoCoordinate(location));
+
+            locationManager.requestLocationUpdates(provider, INTERVAL_MS, 0, this);
         }
         catch (SecurityException e) {
             Log.d(TAG, e.getMessage());
@@ -29,5 +32,10 @@ public final class PlatformLocator extends Locator {
         catch (IllegalArgumentException e) {
             Log.d(TAG, e.getMessage());
         }
+    }
+
+    @Override
+    public void invalidate() {
+        locationManager.removeUpdates(this);
     }
 }

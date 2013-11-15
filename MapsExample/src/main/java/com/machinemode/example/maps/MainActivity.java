@@ -24,10 +24,22 @@ public class MainActivity extends Activity {
 
         mapA = ((MapFragment)getFragmentManager().findFragmentById(R.id.mapA)).getMap();
         mapA.setMyLocationEnabled(true);
-        platformLocator = new PlatformLocator(this, mapA);
 
         mapB = ((MapFragment)getFragmentManager().findFragmentById(R.id.mapB)).getMap();
         mapB.setMyLocationEnabled(true);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        platformLocator = new PlatformLocator(this, mapA);
         googleServicesLocator = new GoogleServicesLocator(this, mapB);
+    }
+
+    @Override
+    protected void onStop() {
+        platformLocator.invalidate();
+        googleServicesLocator.invalidate();
+        super.onStop();
     }
 }
