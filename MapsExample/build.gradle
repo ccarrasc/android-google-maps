@@ -17,8 +17,10 @@ android {
     buildToolsVersion "19"
 
     defaultConfig {
-        minSdkVersion 9
+        minSdkVersion 11
         targetSdkVersion 19
+        testPackageName "com.machinemode.example.maps.tests"
+        testInstrumentationRunner "android.test.InstrumentationTestRunner"
     }
 
 

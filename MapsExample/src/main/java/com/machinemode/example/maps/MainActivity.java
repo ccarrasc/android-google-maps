@@ -22,11 +22,19 @@ public class MainActivity extends Activity {
 
         // TODO: Check for Google Play Services
 
-        mapA = ((MapFragment)getFragmentManager().findFragmentById(R.id.mapA)).getMap();
-        mapA.setMyLocationEnabled(true);
+        MapFragment mapFragment = ((MapFragment)getFragmentManager().findFragmentById(R.id.mapA));
 
-        mapB = ((MapFragment)getFragmentManager().findFragmentById(R.id.mapB)).getMap();
-        mapB.setMyLocationEnabled(true);
+        if(mapFragment != null) {
+            mapA = mapFragment.getMap();
+            mapA.setMyLocationEnabled(true);
+        }
+
+        mapFragment = ((MapFragment)getFragmentManager().findFragmentById(R.id.mapB));
+
+        if(mapFragment != null) {
+            mapB = mapFragment.getMap();
+            mapB.setMyLocationEnabled(true);
+        }
     }
 
     @Override
